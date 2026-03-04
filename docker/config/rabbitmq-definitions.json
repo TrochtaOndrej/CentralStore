@@ -1,0 +1,50 @@
+{
+  "rabbit_version": "3.13",
+  "users": [],
+  "vhosts": [],
+  "permissions": [],
+  "parameters": [],
+  "global_parameters": [
+    {
+      "name": "cluster_name",
+      "value": "centralstore-rabbit"
+    }
+  ],
+  "policies": [
+    {
+      "vhost": "centralstore",
+      "name": "ha-all",
+      "pattern": ".*",
+      "apply-to": "queues",
+      "definition": {
+        "ha-mode": "all",
+        "ha-sync-mode": "automatic",
+        "message-ttl": 86400000,
+        "queue-mode": "lazy"
+      },
+      "priority": 0
+    }
+  ],
+  "queues": [],
+  "exchanges": [
+    {
+      "name": "centralstore.events",
+      "vhost": "centralstore",
+      "type": "topic",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    },
+    {
+      "name": "centralstore.commands",
+      "vhost": "centralstore",
+      "type": "direct",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    }
+  ],
+  "bindings": []
+}

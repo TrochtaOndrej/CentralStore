@@ -1,0 +1,114 @@
+version: "3.9"
+
+services:
+  # ============================================================
+  # PostgreSQL 17 - hlavni databaze pro CentralStore
+  # ============================================================
+  postgres:
+    image: postgres:17-alpine
+    container_name: centralstore-postgres
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      PGDATA: /var/lib/postgresql/data/pgdata
+      TZ: Europe/Prague
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      # Persistentni data - preziji restart i smazani kontejneru
+      - pgdata:/var/lib/postgresql/data
+      # Init skripty - spusti se pri PRVNIM startu (prazdna DB)
+      - ./init-scripts:/docker-entrypoint-initdb.d:ro
+      # Konfigurace PostgreSQL
+      - ./config/postgresql.conf:/etc/postgresql/postgresql.conf:ro
+    command: postgres -c config_file=/etc/postgresql/postgresql.conf
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - centralstore-net
+
+  # ============================================================
+  # pgAdmin 4 - webove rozhrani pro spravu PostgreSQL
+  # ============================================================
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: centralstore-pgadmin
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
+    ports:
+      - "${PGADMIN_PORT:-5050}:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+      - ./config/pgadmin-servers.json:/pgadmin4/servers.json:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - centralstore-net
+
+  # ============================================================
+  # RabbitMQ 3.13 - message broker pro inter-service komunikaci
+  # ============================================================
+  rabbitmq:
+    image: rabbitmq:3.13-management-alpine
+    container_name: centralstore-rabbitmq
+    restart: unless-stopped
+    env_file: .env
+    hostname: centralstore-rabbit
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+      RABBITMQ_DEFAULT_VHOST: ${RABBITMQ_VHOST}
+      RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS: "-rabbit log_levels [{connection,warning}]"
+      TZ: Europe/Prague
+    ports:
+      - "${RABBITMQ_AMQP_PORT:-5672}:5672"     # AMQP protokol
+      - "${RABBITMQ_MGMT_PORT:-15672}:15672"    # Management UI
+    volumes:
+      # Persistentni data - fronty, exchange, zpravy
+      - rabbitmq_data:/var/lib/rabbitmq
+      # Konfigurace
+      - ./config/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+      - ./config/rabbitmq-definitions.json:/etc/rabbitmq/definitions.json:ro
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    networks:
+      - centralstore-net
+
+# ============================================================
+# Persistentni volumes - data preziji restart i smazani kontejneru
+# ============================================================
+volumes:
+  pgdata:
+    driver: local
+    name: centralstore-pgdata
+  pgadmin_data:
+    driver: local
+    name: centralstore-pgadmin-data
+  rabbitmq_data:
+    driver: local
+    name: centralstore-rabbitmq-data
+
+# ============================================================
+# Interni sit pro komunikaci mezi kontejnery
+# ============================================================
+networks:
+  centralstore-net:
+    driver: bridge
+    name: centralstore-network

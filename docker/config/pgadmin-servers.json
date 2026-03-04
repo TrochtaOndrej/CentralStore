@@ -1,0 +1,14 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "CentralStore PostgreSQL",
+      "Group": "CentralStore",
+      "Host": "postgres",
+      "Port": 5432,
+      "MaintenanceDB": "centralstore_master",
+      "Username": "centralstore",
+      "SSLMode": "prefer",
+      "PassFile": "/tmp/pgpassfile"
+    }
+  }
+}
