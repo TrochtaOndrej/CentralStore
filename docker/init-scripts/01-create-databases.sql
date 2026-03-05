@@ -8,35 +8,35 @@
 
 -- Catalog Service DB
 CREATE DATABASE centralstore_catalog
-    OWNER centralstore
+    OWNER postgres
     ENCODING 'UTF8'
     LC_COLLATE 'en_US.utf8'
     LC_CTYPE 'en_US.utf8';
 
 -- Inventory Service DB
 CREATE DATABASE centralstore_inventory
-    OWNER centralstore
+    OWNER postgres
     ENCODING 'UTF8'
     LC_COLLATE 'en_US.utf8'
     LC_CTYPE 'en_US.utf8';
 
 -- POS Service DB
 CREATE DATABASE centralstore_pos
-    OWNER centralstore
+    OWNER postgres
     ENCODING 'UTF8'
     LC_COLLATE 'en_US.utf8'
     LC_CTYPE 'en_US.utf8';
 
 -- Identity Service DB
 CREATE DATABASE centralstore_identity
-    OWNER centralstore
+    OWNER postgres
     ENCODING 'UTF8'
     LC_COLLATE 'en_US.utf8'
     LC_CTYPE 'en_US.utf8';
 
 -- Import Service DB
 CREATE DATABASE centralstore_import
-    OWNER centralstore
+    OWNER postgres
     ENCODING 'UTF8'
     LC_COLLATE 'en_US.utf8'
     LC_CTYPE 'en_US.utf8';
