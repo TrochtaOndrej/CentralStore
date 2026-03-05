@@ -8,7 +8,7 @@
 -- takze extensions pro ostatni DB musime aktivovat explicitne.
 
 -- Master DB
-\c centralstore_master
+\c centralstore
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";      -- generovani UUID
 CREATE EXTENSION IF NOT EXISTS "pg_trgm";         -- trigram index pro fulltext
 

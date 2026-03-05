@@ -5,10 +5,45 @@
       "Group": "CentralStore",
       "Host": "postgres",
       "Port": 5432,
-      "MaintenanceDB": "centralstore_master",
+      "MaintenanceDB": "centralstore",
       "Username": "centralstore",
-      "SSLMode": "prefer",
-      "PassFile": "/tmp/pgpassfile"
+      "SSLMode": "prefer"
+    },
+    "2": {
+      "Name": "CSAI Prod",
+      "Group": "CSAI",
+      "Host": "host.docker.internal",
+      "Port": 5435,
+      "MaintenanceDB": "CSAIProd",
+      "Username": "postgres",
+      "SSLMode": "prefer"
+    },
+    "3": {
+      "Name": "CSAI Dev",
+      "Group": "CSAI",
+      "Host": "host.docker.internal",
+      "Port": 5436,
+      "MaintenanceDB": "CSAIDev",
+      "Username": "postgres",
+      "SSLMode": "prefer"
+    },
+    "4": {
+      "Name": "CryptoRobot Prod",
+      "Group": "CryptoRobot",
+      "Host": "host.docker.internal",
+      "Port": 5432,
+      "MaintenanceDB": "CryptoTraderProd",
+      "Username": "postgres",
+      "SSLMode": "prefer"
+    },
+    "5": {
+      "Name": "CryptoRobot Dev",
+      "Group": "CryptoRobot",
+      "Host": "host.docker.internal",
+      "Port": 5433,
+      "MaintenanceDB": "CryptoTraderDev",
+      "Username": "postgres",
+      "SSLMode": "prefer"
     }
   }
 }

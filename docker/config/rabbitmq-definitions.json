@@ -1,7 +1,11 @@
 {
   "rabbit_version": "3.13",
   "users": [],
-  "vhosts": [],
+  "vhosts": [
+    {
+      "name": "centralstore"
+    }
+  ],
   "permissions": [],
   "parameters": [],
   "global_parameters": [
