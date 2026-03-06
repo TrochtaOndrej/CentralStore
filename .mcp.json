@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "radzen": {
+      "type": "stdio",
+      "command": "radzen.mcp",
+      "args": [],
+      "env": {}
+    }
+  }
+}
