@@ -8,6 +8,7 @@ obj/
 *.userprefs
 [Dd]ebug/
 [Rr]elease/
+!.claude/skills/release/
 x64/
 x86/
 [Ww][Ii][Nn]32/
